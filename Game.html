@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guess the Number Game</title>
+    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css">
+    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+</head>
+<body>
+    <h1>Guess the Number Game</h1>
+    <p>I'm thinking of a number between 1 and 100. Can you guess it? You have 10 attempts!</p>
+    
+    <label for="guess">Your guess: </label>
+    <input type="number" id="guess" name="guess" min="1" max="100">
+    <button id="submit" onclick="game()">Submit Guess</button>
+    
+    <p id="output"></p>
+    
+    <py-script>
+        import random
+        from pyscript import Element
+        
+        # Function to start a new game
+        def start_new_game():
+            global number_to_guess, attempts
+            number_to_guess = random.randint(1, 100)  # Generate a new random number
+            attempts = 0  # Reset attempts
+            Element('output').element.innerText = f"New game started! Guess the number between 1 and 100. Attempts remaining: {max_attempts}"
+            print(f"New number to guess is: {number_to_guess}")  # Print to console for debugging
+
+        # Game variables
+        max_attempts = 10
+        attempts = 0
+        start_new_game()  # Start the first game
+        
+        def game():
+            global attempts
+            guess = int(Element('guess').value)
+            attempts += 1
+
+            # Checking the guess
+            if guess < number_to_guess:
+                Element('output').element.innerText = "Too low! Try again."
+            elif guess > number_to_guess:
+                Element('output').element.innerText = "Too high! Try again."
+            else:
+                Element('output').element.innerText = f"Congratulations! You guessed the number in {attempts} attempts."
+                Element('submit').disabled = True  # Disable the button after winning
+
+            # If attempts are over, reset for a new game
+            if attempts >= max_attempts and guess != number_to_guess:
+                Element('output').element.innerText = f"Game over! The number was {number_to_guess}. Starting a new game..."
+                start_new_game()
+                Element('submit').disabled = False  # Enable the button again for the new game
+    </py-script>
+</body>
+</html>
